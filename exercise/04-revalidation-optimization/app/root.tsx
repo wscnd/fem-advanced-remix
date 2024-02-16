@@ -15,6 +15,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Dialog } from "@reach/dialog";
 import reachDialogStylesheet from "@reach/dialog/styles.css";
 import { getUser } from "./session.server";
+import type { ShouldReloadFunction } from "@remix-run/react";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import { dangerButtonClasses, submitButtonClasses } from "./components";
@@ -36,6 +37,15 @@ export async function loader({ request }: LoaderArgs) {
     user: await getUser(request),
   });
 }
+
+export const unstable_shouldReload: ShouldReloadFunction = ({
+  params,
+  submission,
+}) => {
+  console.log("params:", params);
+  console.log("submission:", submission);
+  return submission?.action === "/login" || submission?.action == "/logout";
+};
 
 export default function App() {
   const { user } = useLoaderData<typeof loader>();
@@ -118,6 +128,3 @@ function LogoutTimer() {
     </Dialog>
   );
 }
-
-// 🐨 Add unstable_shouldReload here and only reload the data if the transition
-// has a submission where the action is "/login" or "/logout"
