@@ -14,6 +14,7 @@ import { useId, useState } from "react";
 import type { LineItemFields } from "~/models/invoice.server";
 import { createInvoice } from "~/models/invoice.server";
 import { parseDate } from "~/utils";
+import { CustomerCombobox } from "../../../resources/customers";
 
 export async function loader({ request }: LoaderArgs) {
   await requireUser(request);
@@ -112,11 +113,12 @@ export async function action({ request }: ActionArgs) {
 
 export default function NewInvoice() {
   const actionData = useActionData<typeof action>();
+
   return (
     <div className="relative p-10">
       <h2 className="font-display mb-4">New Invoice</h2>
       <Form method="post" className="flex flex-col gap-4">
-        {/* 🐨 Render the CustomerCombobox here */}
+        <CustomerCombobox error={actionData?.errors?.customerId} />
         <div>
           <div className="flex flex-wrap items-center gap-1">
             <label htmlFor="dueDate">
