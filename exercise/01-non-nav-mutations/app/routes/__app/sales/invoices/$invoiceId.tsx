@@ -3,6 +3,8 @@ import { json } from "@remix-run/node";
 import {
   Link,
   useCatch,
+  useFetcher,
+  useFetchers,
   useLoaderData,
   useLocation,
   useParams,
@@ -104,6 +106,7 @@ const lineItemClassName =
 export default function InvoiceRoute() {
   const data = useLoaderData<typeof loader>();
   const location = useLocation();
+
   return (
     <div className="relative p-10" key={location.key}>
       <Link
@@ -150,7 +153,7 @@ export default function InvoiceRoute() {
 
 function Deposits() {
   const data = useLoaderData<typeof loader>();
-  // 🐨 call useFetcher here to get the fetcher for the form
+  const { Form } = useFetcher();
 
   return (
     <div>
@@ -170,8 +173,7 @@ function Deposits() {
       ) : (
         <div>None yet</div>
       )}
-      {/* 🐨 change this to your fetcher.Form */}
-      <form
+      <Form
         method="post"
         className="grid grid-cols-1 gap-x-4 gap-y-2 lg:grid-cols-2"
       >
@@ -228,7 +230,7 @@ function Deposits() {
             </button>
           </div>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }
