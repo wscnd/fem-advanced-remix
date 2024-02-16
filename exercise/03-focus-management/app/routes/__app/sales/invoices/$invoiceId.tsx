@@ -1,5 +1,8 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import type { UseDataFunctionReturn } from "@remix-run/react/dist/components";
+import type {
+  FetcherWithComponents,
+  UseDataFunctionReturn,
+} from "@remix-run/react/dist/components";
 import { json } from "@remix-run/node";
 import {
   Link,
@@ -196,14 +199,22 @@ function Deposits() {
     if (newDepositFetcher.state !== "idle") return;
 
     // 🐨 If there's an error on the amount, focus the amount element
+    //
+    if (errors?.ammount) {
+      formRef.current.elements.amount?.focus();
+    } else if (errors?.depositDate) {
+      formRef.current.elements.depositDate?.focus();
+      // } else {
+    } else if (document.activeElement === formRef.current.elements.intent) {
+      formRef.current.reset();
+      formRef.current.elements.amount?.focus();
+    }
 
     // 🐨 If there's an error on the desposit date, focus the depositDate element
 
     // 🐨 Focus on the amount field
     // 💯 In what situation would we want to *not* change focus and *not* reset the form at this point?
-
-    formRef.current.reset();
-  }, [newDepositFetcher.state]);
+  }, [newDepositFetcher.state, errors]);
 
   return (
     <div>
