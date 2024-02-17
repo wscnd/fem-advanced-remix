@@ -46,27 +46,28 @@ export async function getCustomerDetails(customerId: string) {
   );
   const customer = await prisma.customer.findUnique({
     where: { id: customerId },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      invoices: {
-        select: {
-          id: true,
-          dueDate: true,
-          number: true,
-          lineItems: {
-            select: {
-              quantity: true,
-              unitPrice: true,
-            },
-          },
-          deposits: {
-            select: { amount: true },
-          },
-        },
-      },
-    },
+    include: { invoices: { include: { deposits: true, lineItems: true } } },
+    // select: {
+    //   id: true,
+    //   name: true,
+    //   email: true,
+    //   invoices: {
+    //     select: {
+    //       id: true,
+    //       dueDate: true,
+    //       number: true,
+    //       lineItems: {
+    //         select: {
+    //           quantity: true,
+    //           unitPrice: true,
+    //         },
+    //       },
+    //       deposits: {
+    //         select: { amount: true },
+    //       },
+    //     },
+    //   },
+    // },
   });
   if (!customer) return null;
 
